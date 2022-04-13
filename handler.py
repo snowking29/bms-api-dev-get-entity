@@ -4,7 +4,7 @@ from service.entity import getAll
 
 def handler(event, context):
     print("Evento recibido: ",json.dumps(event))
-    path = event["pathParameters"]["entidad"]
+    path = event["pathParameters"]["entity"]
     params = event["queryStringParameters"]
     try:
         response = getAll(path,params)

@@ -3,11 +3,11 @@ import json
 import bson
 import traceback
 import pymongo as py
-from db_util.get_connection import mongodb_conn
+from db_util.get_connection import mongodb_connection
 from db_util.get_collection import mongodb_collection
 
 def getAll(entity,params):
-    conn = mongodb_conn()
+    conn = mongodb_connection()
     print("Info Base de datos: ", conn.server_info())
     if conn is None:
         #No conexión, salida anticipada
@@ -22,30 +22,26 @@ def getAll(entity,params):
     data = json.loads(json.dumps(list(collection.find(params,{"_id":0}))))
     
     if len(data) == 0:
-        data = {}
         success = "false"
         code = "01"
         value = "No se encontró información."
     else:
-        data = data[0]
         success = "true"
         code = "00"
         value = "Se proceso correctamente la solicitud."
-    
+        
     conn.close() 
     
     response = {
         "success": success,
-        "configuration": {
-            "data": json.loads(json.dumps(data)),
-            "meta": {
-                "status": {
-                    "code": code,
-                    "message_ilgn": [{
-                        "locale": "es_PE",
-                        "value": value
-                    }]
-                }
+        "data": json.loads(json.dumps(data)),
+        "meta": {
+            "status": {
+                "code": code,
+                "message_ilgn": [{
+                    "locale": "es_PE",
+                    "value": value
+                }]
             }
         }
     }
